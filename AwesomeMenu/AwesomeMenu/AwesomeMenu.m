@@ -49,6 +49,26 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 
 #pragma mark - Initialization & Cleaning up
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+        self.nearRadius = kAwesomeMenuDefaultNearRadius;
+        self.endRadius = kAwesomeMenuDefaultEndRadius;
+        self.farRadius = kAwesomeMenuDefaultFarRadius;
+        self.timeOffset = kAwesomeMenuDefaultTimeOffset;
+        self.rotateAngle = kAwesomeMenuDefaultRotateAngle;
+        self.menuWholeAngle = kAwesomeMenuDefaultMenuWholeAngle;
+        self.startPoint = CGPointMake(kAwesomeMenuDefaultStartPointX, kAwesomeMenuDefaultStartPointY);
+        self.expandRotation = kAwesomeMenuDefaultExpandRotation;
+        self.closeRotation = kAwesomeMenuDefaultCloseRotation;
+        self.animationDuration = kAwesomeMenuDefaultAnimationDuration;
+        self.rotateAddButton = YES;
+    }
+    return self;
+}
+
 - (id)initWithFrame:(CGRect)frame startItem:(AwesomeMenuItem*)startItem menuItems:(NSArray *)menuItems
 {
     self = [super initWithFrame:frame];
@@ -70,9 +90,6 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
         
         // assign startItem to "Add" Button.
         self.startButton = startItem;
-        self.startButton.delegate = self;
-        self.startButton.center = self.startPoint;
-        [self addSubview:self.startButton];
     }
     return self;
 }
@@ -83,6 +100,19 @@ static CGPoint RotateCGPointAroundCenter(CGPoint point, CGPoint center, float an
 }
 
 #pragma mark - Getters & Setters
+
+- (void)setStartButton:(AwesomeMenuItem *)startButton
+{
+    if (_startButton) {
+        [_startButton removeFromSuperview];
+    }
+    
+    _startButton = startButton;
+    _startButton.delegate = self;
+    _startButton.center = self.startPoint;
+    
+    [self addSubview:_startButton];
+}
 
 - (void)setStartPoint:(CGPoint)aPoint
 {
